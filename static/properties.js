@@ -7,9 +7,7 @@ define(['jquery'], function ($) {
         component: 'button',
         default: false,
         action: function () {
-            setupOn = true;
-            connRendered = false;
-            dialogStatus = 0;
+            $("#buttonPlugin").attr("setup", '{"setupOn": true, "dialogStatus": 0}');
             $("#buttonPlugin").click();
             $("#step1Header").hide();
             $("#step1Content").hide();

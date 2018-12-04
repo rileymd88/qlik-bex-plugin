@@ -1,6 +1,6 @@
 {
   "server": {
-    "host": "dedus-ckh",
+    "host": "dedus-ckh.qliktech.com",
     "isSecure": false,
     "prefix": "hdr",
     "headers": {
