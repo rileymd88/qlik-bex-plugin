@@ -1,0 +1,16 @@
+var reloadDone = false;
+var rendered = false;
+var metaRendered = false;
+var connRendered = false;
+var variableMode = false;
+var newApp = true;
+var newAppName = '';
+var newBookmark = false;
+var newBookmarkName = '';
+var variableValueList = [];
+var setupOn = false;
+var popUp = false;
+var dialogStatus = 0;
+var qdcApp;
+var oldHideElement;
+var goToVariableSelections;

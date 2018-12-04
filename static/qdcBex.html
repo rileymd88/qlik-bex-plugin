@@ -1,0 +1,24 @@
+<div id="qdcModalConn" class="lui-modal-background"></div>
+<div id="qdcLoadDialogConn" class="lui-dialog">
+  <div class="lui-dialog__header">
+    <div class="lui-dialog__title">SAP BEx Connection</div>
+  </div>
+  <div id="qdcLoadDialogContentConn" class="lui-dialog__body">
+    Please input the correct paramaters for your SAP BEx Connection
+    <br>
+    <br>
+    <label class="lui-label">Server Type</label> <select id="bexServer" class="lui-select"><option value="0" selected>Application Server</option><option value="1">Messaging Server</option></select>
+    <label class="lui-label">Host</label> <input id="bexHost" class="lui-input"/>
+    <label class="lui-label">Client</label> <input id="bexClient" class="lui-input"/>
+    <label class="lui-label">System Nr</label> <input id="bexSystemNr" class="lui-input"/>
+    <label class="lui-label">Logon Language</label> <input id="bexLanguage" class="lui-input"/>
+    <label class="lui-label">Username</label> <input id="bexUsername" class="lui-input"/>
+    <label class="lui-label">Password</label> <input type="password" id="bexPassword" class="lui-input"/>
+    <div id="qdcLoaderConn" class="loader" style="display: none;"></div>
+  </div>
+  <div class="lui-dialog__footer">
+    <button id="saveConnectionButton" class="lui-button  lui-dialog__button lui-button--success">Save</button>
+    <button id="cancelConnectionButton" class="lui-button  lui-dialog__button">Cancel</button>
+    <button id="okConnectionButton" class="lui-button  lui-dialog__button lui-button--success" style="display: none;">OK</button>
+  </div>
+</div>

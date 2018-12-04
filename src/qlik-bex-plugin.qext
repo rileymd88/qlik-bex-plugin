@@ -1,0 +1,14 @@
+{
+	"name": "Qlik BEx Plugin",
+	"description": "A plugin which enables a seamless Qlik BEx experience",
+	"type": "visualization",
+	"version": "1.0.0",
+	"icon": "database",
+	"preview": "./assets/BexPluginLogo_Hintergrund_weiß.png",
+	"author": "QlikPresales",
+	"keywords": "qlik-sense, visualization",
+	"repository": "",
+	"dependencies": {
+		"qlik-sense": ">=3.0.x"
+	}
+}

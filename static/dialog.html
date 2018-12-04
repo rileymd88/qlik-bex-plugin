@@ -1,0 +1,193 @@
+<div id="pluginDialogBackground" class="lui-modal-background"></div>
+<div id="pluginDialog" class="lui-dialog pluginDialog">
+  <div id="step1Titel" class="lui-dialog__header">
+    <div class="lui-dialog__title">Qlik BEx Plugin</div>
+  </div>
+
+  <!-- Setup Dialog -->
+  <div id="setupHeader" class="lui-dialog__body pluginHeader">
+    <div class="headerDescription">
+      <h1>Setup</h1>
+      <p>Please choose an SAP BEx Connection and SAP BEx Meta App to be used</p>
+    </div>
+  </div>
+  <div id="setupContent" class="lui-dialog__body pluginContent">
+    <div class="contentArea">
+      <h3>Setup Options:</h3>
+      <table class="QueryTable">
+        <tr>
+          <td class="contentArea-desc">
+            <h1>Create New SAP BEx Connection</h1>
+          </td>
+          <td class="contentObj">
+            <div>
+              <button id="createBex" class="lui-button  lui-button--rounded"><span class="lui-button__icon  lui-icon  lui-icon--plus"></span><span
+                  class="lui-button__text">Add SAP BEx Connection</span></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="contentArea-desc">
+            <h1>Select SAP BEx Connection</h1>
+          </td>
+          <td class="contentObj">
+            <div>
+              <select id="selectBex" class="lui-select"></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="contentArea-desc">
+            <h1>Select SAP BEx Meta Data App:</h1>
+          </td>
+          <td class="contentObj">
+            <div>
+              <select id="selectMeta" class="lui-select"></div>
+          </td>
+        </tr>
+      </table>
+      </div>
+    </div>
+    <!-- Setup Dialog-->
+
+    <!-- Step 1 Dialog -->
+    <div id="step1Header" class="lui-dialog__body pluginHeader">
+      <div class="headerDescription">
+        <h1>Chose your Query</h1>
+        <p>Please choose your Query, Dimensions and Measures you would like to load. You can also chose a predefined Query
+          from the Bookmark Button. In case you like to clear the selection you can do this with the Clear Selections Button.</p>
+      </div>
+    </div>
+    <div id="step1Content" class="lui-dialog__body pluginContent">
+      <div class="contentArea">
+        <table class="QueryTable">
+          <tr>
+            <td class="contentArea-desc">
+              <h1>Query Name:</h1>
+            </td>
+            <td class="contentObj">
+              <div>
+                <div class="filterHolder" id="filterHolder0"></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="contentArea-desc">
+              <h1>Dimensions:</h1>
+            </td>
+            <td class="contentObj">
+              <div>
+                <div class="filterHolder" id="filterHolder1"></div>
+            </td>
+          </tr>
+          <tr>
+            <td class="contentArea-desc">
+              <h1>Measures:</h1>
+            </td>
+            <td class="contentObj">
+              <div>
+                <div class="filterHolder" id="filterHolder2"></div>
+            </td>
+          </tr>
+        </table>
+        <h3>Bookmark Options:</h3>
+        <table>
+          <tr>
+            <td class="contentArea-desc">
+              <h1>Bookmark:</h1>
+            </td>
+            <td class="contentObj">
+              <select id="selectBookmark" class="lui-select">
+            </td>
+          </tr>
+        </table>
+        </div>
+        </div>
+        <!-- /Step 1 Dialog-->
+
+        <!-- Step 2 Dialog -->
+
+        <div id="step2Header" class="lui-dialog__body pluginHeader">
+          <div class="headerDescription">
+            <h1>Select Variables</h1>
+            <p>Please select your Variables. It is possible to select multipe values. If you would like to check your selected
+              variables you can click on Validate Variables. Once you are finished with your selections you can run the Query
+              by clicking Next.
+              <br>
+              <br>
+              <strong>* Mandatory variables will be marked in bold</strong>
+            </p>
+          </div>
+        </div>
+        <div id="step2Content" class="lui-dialog__body pluginContent">
+          <div class="contentArea">
+            <div class="noVariable" id="noVariableMessage">
+              <p><strong>Looks like there are no variables for this Query! Please hit next to run your Query</strong></p>
+            </div>
+            <table id="qdcTable">
+              <thead>
+                <tr>
+                  <th id="variableHeader" class="qdcTh">Variable</th>
+                  <th class="qdcTh">Operation</th>
+                  <th class="qdcTh">Value</th>
+                </tr>
+              </thead>
+              <tbody id="qdcTableContent"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- /Step 2 Dialog-->
+
+        <!-- Step 3 Dialog -->
+
+        <div id="step3Header" class="lui-dialog__body pluginHeader">
+          <div class="headerDescription">
+            <h1>Loading Data...</h1>
+            <p>This Qlik Sense App is currently making a live connection based on your SAP BEx Selection. After that your
+              BEx Query gets executed by SAP BW. When this has finished you can jump to the Insights Board or to your sheet.</p>
+          </div>
+        </div>
+        <div id="step3Content" class="lui-dialog__body pluginContent">
+          <div class="contentArea">
+            <table class="dialogReload">
+              <tbody>
+                <tr>
+                  <td>
+                    <div id="qdcLoader" class="loader"></div>
+                    <svg  id="reloadSuccess" class="reloadCheck" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                      <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                      <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                    </svg>
+                    <svg id="reloadFailure" class="reloadCheck" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                      <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                      <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
+                      <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
+                    </svg>
+                    <timer><time>00:00:00</time></timer>
+                  </td>
+                  <td>
+                    <div id="qdcLoadDialogContent">
+                      <pre class="pre-dialog"><code id="reloadStatus"></code></pre>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- /Step 3 Dialog -->
+
+
+        <div id="step1Footer" class="lui-dialog__footer">
+          <button id="resetSelections" class="lui-button  lui-dialog__button">Reset Selections</button>
+          <button id="clearSelections" class="lui-button  lui-dialog__button">Clear Selections</button>
+          <button id="validateVariables" class="lui-button  lui-dialog__button">Validate Variables</button>
+          <button id="backButton" class="lui-button  lui-dialog__button">Back to Query Selection</button>
+          <button id="dialogCancel" class="lui-button  lui-dialog__button">Cancel</button>
+          <button id="dialogNext" class="lui-button  lui-dialog__button lui-button--success">Next</button>
+          <button id="goToSheet" class="lui-button  lui-dialog__button">Go to Sheet</button>
+          <button id="cancelScript" class="lui-button  lui-dialog__button lui-button--success">Cancel</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
