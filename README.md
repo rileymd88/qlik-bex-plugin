@@ -53,8 +53,8 @@ The Qlik BEx Plugin has been tested within the following setups
 4. Make sure that the name of the data connection in line 9 matches the previously created BAPI connector data connection
 5. Make sure that the name of the folder connection is correctly inserted in line 2 of script section "Load Metadata"
 6. Execute the load script
-![BEX1](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx1.PNG)
-![BEX2](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx2.PNG)
+![BEX1](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx1.png)
+![BEX2](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx2.png)
 
 ### Extract Metadata for specific Queries only
 1. Open the Metadata App within the Data Load Editor
@@ -65,7 +65,7 @@ The Qlik BEx Plugin has been tested within the following setups
 5. Comment line 44 (call LOADALL)
 6. Uncomment line 41 (call LOADALL_CUSTOM)
 7. Make sure that only line 31 (CALL QUERYS) is uncommented
-![BEX3](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx3.PNG)
+![BEX3](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx3.png)
 8. Execute the load script
 9. Open the QUERYS_B7Q.txt file within your folder connection location
 10. Delete all Querys instead of those you want to extract
@@ -80,15 +80,15 @@ The Qlik BEx Plugin has been tested within the following setups
 2. Add some data to it (e.g. 1 inline table)
     a. reason: you cannot create a sheet if the app contains no data. For production use it is intended that all users to work within 1 per Query
 3. Create a new sheet and drag the BEx plugin onto the canvas
-![BEX4](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx4.PNG)
+![BEX4](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx4.png)
 4. Click on setup
     a. The one time setup screen appears (you can re-enter it by using the extension properties option)
     b. note that the Connection and the Metadata App are automatically filled. The Plugin searches for BEx data connections for apps containing the phrase "meta" within the app description (not the app name)
-![BEX5](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx5.PNG)
+![BEX5](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx5.png)
 5. Go ahead and select your query, dimensions and measures
-![BEX6](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx6.PNG)
+![BEX6](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx6.png)
 6. Then enter your variables by either manually typing in the values or by clicking on the search icon to search for your values. Mandatory variables are marked in bold.
-![BEX7](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx7.PNG
+![BEX7](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx7.png)
 7. Click on next and load the data
 8. You can go to sheet editing or directly jump into the insights advisor
     a. note: the BEx Plugin stores your selection and setup information within a special script part
