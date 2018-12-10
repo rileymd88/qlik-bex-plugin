@@ -85,6 +85,7 @@ The Qlik BEx Plugin has been tested within the following setups
 2. Add some data to it (e.g. 1 inline table)
     a. reason: you cannot create a sheet if the app contains no data. For production use it is intended that all users to work within 1 per Query
 3. Create a new sheet and drag the BEx plugin onto the canvas
+
 ![BEX4](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx4.png)
 4. Click on setup
     a. The one time setup screen appears (you can re-enter it by using the extension properties option)
