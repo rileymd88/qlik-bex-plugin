@@ -9,7 +9,12 @@ The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and bring
 * You can reuse any kind of SAP Metadata (e.g. Hierarchies, Security)
 * You can easily connect your BEx Queries with other data sources (like other Queries or non SAP Data)
 
-## Installation
+
+*Important Information*
+>This extension code requires packing using the qExt tools to develop it further. You can NOT download the repo and directly install as an extension. To get the correct approved version download from the releases page (file: qlik-bex-plugin.zip) and install directly into Qlik Sense.
+
+* [GitHub releases page](https://github.com/rileymd88/qlik-bex-plugin/releases)
+
 ### Requirements
 The Qlik BEx Plugin has been tested within the following setups
 
@@ -92,3 +97,6 @@ The Qlik BEx Plugin has been tested within the following setups
 7. Click on next and load the data
 8. You can go to sheet editing or directly jump into the insights advisor
     a. note: the BEx Plugin stores your selection and setup information within a special script part
+
+## Developing the Extension Further
+1.  Install node.js from here * [here](https://nodejs.org/en/download/current/)  
