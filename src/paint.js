@@ -13,6 +13,7 @@ var bexConnection = '';
 
 
 export default async function ($element, layout) {
+    console.log('paint');
 
     if (layout.hideElement) {
         $('#setupLogoContainer').hide();
@@ -26,9 +27,6 @@ export default async function ($element, layout) {
     // Only run through here if page has not been rendered before
     if (!rendered) {
         rendered = true;
-
-
-
         // Get app references
         var app = await qlik.currApp(this);
         var global = await qlik.getGlobal(config);
@@ -78,10 +76,8 @@ export default async function ($element, layout) {
         }
 
         var bexConnectionSplit = currentScript.split('SAPBEXCONN');
-        console.log(bexConnectionSplit);
         if (bexConnectionSplit[1]) {
             bexConnection = bexConnectionSplit[1];
-            console.log('bex', bexConnection);
         }
 
         setupCheck = await checkForSetup();
@@ -136,7 +132,6 @@ export default async function ($element, layout) {
         function setupButtonPlugin() {
             $("#buttonPlugin").on('click', async function () {
                 if ($("#buttonPlugin").attr("setup")) {
-                    console.log('setup');
                     var setupData = JSON.parse($("#buttonPlugin").attr("setup"));
                     setupOn = setupData.setupOn;
                     dialogStatus = setupData.dialogStatus;
@@ -253,28 +248,24 @@ export default async function ($element, layout) {
                     if ($('#filterHolder0').is(':empty')) {
 
                         qdcApp.visualization.get(qdcConfig.measures).then(function (vis) {
-                            vis.show("filterHolder2").then(function () {
-                            });
+                            vis.show("filterHolder2");
                         });
                         qdcApp.visualization.get(qdcConfig.dimensions).then(function (vis) {
-                            vis.show("filterHolder1").then(function () {
-                            });
+                            vis.show("filterHolder1");
                         });
                         qdcApp.visualization.get(qdcConfig.bexQueryDesc).then(function (vis) {
-                            vis.show("filterHolder0").then(function () {
-                                //Asks if Browser is IE
-                                var isIE = false || !!document.documentMode;
-                                if (isIE == true) {
-                                    waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
-                                }
-                            });
+                            vis.show("filterHolder0");
+                            //Asks if Browser is IE
+                            var isIE = false || !!document.documentMode;
+                            if (isIE == true) {
+                                waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
+                            }
                         });
                     }
 
                     // Function that waits for Listbox-containers - IE11 display bug
                     function waitForElementToDisplay(selector, time) {
                         if (document.querySelector(selector) != null) {
-                            console.log('isIE');
                             $(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive").removeClass('spark');
                             return;
                         }
@@ -335,8 +326,8 @@ export default async function ($element, layout) {
                         }
                         variableValueList = [];
                         $(".qdcTd").on('click', ".lui-icon.lui-icon--large.lui-icon--search", async function () {
+                            console.log('click');
                             var techVarName = $(this).attr("value");
-
                             var id = $(this).parent().attr('id').replace('varTd', '');
                             var opType = $(`#qdcInput${id}`).val();
                             var index = $(this).index();
@@ -347,8 +338,14 @@ export default async function ($element, layout) {
                             if (opType == 'BT' && index == 3) {
                                 lowHigh = 'HIGH';
                             }
-                            var filterPane = await createVariableFilters(techVarName);
-                            createVariableDialog(filterPane, techVarName, lowHigh);
+                            try {
+                                var filterPane = await createVariableFilters(techVarName);
+                                createVariableDialog(filterPane, techVarName, lowHigh);
+                            }
+                        
+                            catch (err) {
+                                console.log('351', err);
+                            }
                         })
                     }
                     else {
@@ -546,21 +543,22 @@ export default async function ($element, layout) {
                 }
 
                 // Function to create variable filter box
-                async function createVariableFilters(techVarName) {
-                    return new Promise(async function (resolve, reject) {
-                        var listBox = await qdcApp.visualization.create('listbox', null, {
-                            qListObjectDef: {
-                                qDef: {
-                                    qFieldDefs: [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP, null())`]
-                                }
-                            }
-                        })
-                        resolve(listBox);
+                function createVariableFilters(techVarName) {
+                    console.log('createVariableFilters', techVarName);
+                    return new Promise(function (resolve, reject) {
+                        qdcApp.visualization.create(
+                            'listbox',
+                            [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP, null())`],
+                            {}
+                        ).then(function (vis) {
+                            resolve(vis);
+                        });
                     })
                 }
 
                 // Function to create pop up variable dialog with filterpane
                 async function createVariableDialog(filterPane, techVarName, lowHigh) {
+                    console.log('createVariableDialog');
                     await qdcApp.field('VAR_NAM_FINAL').clear();
                     $("body").append(varHtml);
                     filterPane.show($("#qdcVariableDialogContent"));
@@ -572,7 +570,12 @@ export default async function ($element, layout) {
                     $("#saveVariableDialog").click(async function () {
                         $("#qdcVariableModal").remove();
                         $("#qdcVariableDialog").remove();
-                        var selections = await getStringExpression(`=Concat({<VAR_NAM_FINAL={'${techVarName}'}>}distinct "MEM_NAM", ';', 1000)`);
+                        try {
+                            var selections = await getStringExpression(`=Concat({<VAR_NAM_FINAL={'${techVarName}'}>}distinct "MEM_NAM", ';', 1000)`);
+                        }
+                        catch (err) {
+                            console.log('580', err);
+                        }
                         var selector = `#varInput${techVarName}`;
                         if (lowHigh == 'LOW') {
                             selector = `#varInput${techVarName}.lui-input.variableLow`;
@@ -581,8 +584,14 @@ export default async function ($element, layout) {
                             selector = `#varInput${techVarName}.lui-input.variableHigh`;
                         }
                         $(`${selector}`).val(selections);
-                        await qdcApp.field('MEM_CAP').clear();
-                        destroyObject(filterPane.id);
+                        try {
+                            await qdcApp.field('MEM_CAP').clear();
+                            destroyObject(filterPane.id);
+                        }
+                        catch (err) {
+                            console.log('595', err);
+                        }
+
                     })
                 }
 
@@ -623,6 +632,7 @@ export default async function ($element, layout) {
                         await enigma.app.destroySessionObject(id);
                     }
                     catch (err) {
+                        console.log(err);
                     }
                 }
 
@@ -692,7 +702,6 @@ export default async function ($element, layout) {
                             await qdcApp.field("DIM_CAP").selectValues(dimensionsList, false, true);
                             await qdcApp.field("MES_CAP").selectValues(measuresList, false, true);
                             await qdcApp.field("DESCRIPTION_QUERY").selectValues(queryNameList, false, true);
-                            console.log(queryNameList);
                         }
                         catch (err) {
                         }
@@ -713,7 +722,6 @@ export default async function ($element, layout) {
                         var layoutItems = await enigma.app.getAllInfos();
                         var dimensionsList = await qlik.callRepository("/qrs/app/object/full?filter=app.id eq " + app.id + " and description eq 'BExPlugin' and objectType eq 'dimension'");
                         var measuresList = await qlik.callRepository("/qrs/app/object/full?filter=app.id eq " + app.id + " and description eq 'BExPlugin' and objectType eq 'measure'")
-                        console.log(measuresList);
                         // Destroy
                         for (var i = 0; i < measuresList.data.length; i++) {
                             enigma.app.destroyMeasure(measuresList.data[i].engineObjectId);
@@ -830,7 +838,6 @@ export default async function ($element, layout) {
                     var bexConnectionSplit = currentScript.split('SAPBEXCONN');
                     if (bexConnectionSplit[1]) {
                         bexConnection = bexConnectionSplit[1];
-                        console.log('bex', bexConnection);
                     }
                     script += `\n LIB CONNECT TO '${bexConnection}'; \n\n`;
                     var variableArrays = ''
@@ -961,11 +968,10 @@ export default async function ($element, layout) {
                         function waitForElementToDisplayLoadScreen(selector, time) {
                             if (document.querySelector(selector) != null) {
                                 $('.lui-dialog-container').hide();
-                                console.log('hidden Loaddialog!');
                                 return;
                             }
                             else {
-                                if(vStopLoadDialog != true) {
+                                if (vStopLoadDialog != true) {
                                     setTimeout(function () {
                                         waitForElementToDisplayLoadScreen(selector, time);
                                     }, time);
@@ -974,12 +980,11 @@ export default async function ($element, layout) {
                         }
 
                         // Watch for Reload Screen and hide it.
-                        waitForElementToDisplayLoadScreen('.lui-dialog-container',50)
+                        waitForElementToDisplayLoadScreen('.lui-dialog-container', 50)
 
                         // End Watch for Reload Screen after 10 seconds.
                         setTimeout(() => {
                             vStopLoadDialog = true;
-                            console.log('done');
                         }, 10000);
 
                         // Reload Progress Information.

@@ -1,10 +1,10 @@
 {
   "server": {
-    "host": "dedus-ckh.qliktech.com",
+    "host": "qmi-qs-cln",
     "isSecure": false,
     "prefix": "hdr",
     "headers": {
-      "hdr-usr": "QTSEL\\ckg",
+      "hdr-usr": "QMI-QS-CLN\\Vagrant",
       "cache-control": "no-cache"
     },
     "addParams": {
