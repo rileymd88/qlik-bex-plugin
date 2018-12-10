@@ -37,7 +37,7 @@ The Qlik BEx Plugin has been tested within the following setups
 *The BEx Plugin uses the Qlik SAP BAPI Connector + the Qlik SAP BEx Connector to retrieve Metadata and Data from SAP. All limitations from those 2 components do apply to the BEx Plugin too. (see BEx Limitations)
 * The wizard might not be able to generate valid data load scripts for all kind of BEx query setups (specials types of variables/hierarchies)
 
-#### Step by Step Installation Instruction
+## Step by Step Installation Instruction
 1. Qlik Sense Enterprise (as listed above)
 2. Qlik Connector for SAP (as listed above)
     a. note: Engine and Service Dispatcher have to be restarted after installation
