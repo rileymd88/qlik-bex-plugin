@@ -48,7 +48,7 @@ The Qlik BEx Plugin has been tested within the following setups
 
 ## Metadata App
 *Important Note:*
-* The metadata extraction loads all metadata from the entire BW System (Querys, Dimensions, Measures, Variables and masterdata). Especially the masterdata tables can be huge so your data load script might have an impact on the system performance (both SAP and Qlik side). Keep that in mind and think about to extract only a distinct number of Queries.
+>The metadata extraction loads all metadata from the entire BW System (Querys, Dimensions, Measures, Variables and masterdata). Especially the masterdata tables can be huge so your data load script might have an impact on the system performance (both SAP and Qlik side). Keep that in mind and think about to extract only a distinct number of Queries.
 
 ### Full Extraction
 1. Open the Metadata App within the Data Load Editor
@@ -97,6 +97,3 @@ The Qlik BEx Plugin has been tested within the following setups
 7. Click on next and load the data
 8. You can go to sheet editing or directly jump into the insights advisor
     a. note: the BEx Plugin stores your selection and setup information within a special script part
-
-## Developing the Extension Further
-1.  Install node.js from here * [here](https://nodejs.org/en/download/current/)  
