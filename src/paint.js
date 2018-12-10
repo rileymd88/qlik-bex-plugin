@@ -13,7 +13,6 @@ var bexConnection = '';
 
 
 export default async function ($element, layout) {
-    console.log('paint');
 
     if (layout.hideElement) {
         $('#setupLogoContainer').hide();
@@ -326,7 +325,6 @@ export default async function ($element, layout) {
                         }
                         variableValueList = [];
                         $(".qdcTd").on('click', ".lui-icon.lui-icon--large.lui-icon--search", async function () {
-                            console.log('click');
                             var techVarName = $(this).attr("value");
                             var id = $(this).parent().attr('id').replace('varTd', '');
                             var opType = $(`#qdcInput${id}`).val();
@@ -344,7 +342,6 @@ export default async function ($element, layout) {
                             }
                         
                             catch (err) {
-                                console.log('351', err);
                             }
                         })
                     }
@@ -544,7 +541,6 @@ export default async function ($element, layout) {
 
                 // Function to create variable filter box
                 function createVariableFilters(techVarName) {
-                    console.log('createVariableFilters', techVarName);
                     return new Promise(function (resolve, reject) {
                         qdcApp.visualization.create(
                             'listbox',
@@ -558,7 +554,6 @@ export default async function ($element, layout) {
 
                 // Function to create pop up variable dialog with filterpane
                 async function createVariableDialog(filterPane, techVarName, lowHigh) {
-                    console.log('createVariableDialog');
                     await qdcApp.field('VAR_NAM_FINAL').clear();
                     $("body").append(varHtml);
                     filterPane.show($("#qdcVariableDialogContent"));
@@ -574,7 +569,6 @@ export default async function ($element, layout) {
                             var selections = await getStringExpression(`=Concat({<VAR_NAM_FINAL={'${techVarName}'}>}distinct "MEM_NAM", ';', 1000)`);
                         }
                         catch (err) {
-                            console.log('580', err);
                         }
                         var selector = `#varInput${techVarName}`;
                         if (lowHigh == 'LOW') {
@@ -589,7 +583,6 @@ export default async function ($element, layout) {
                             destroyObject(filterPane.id);
                         }
                         catch (err) {
-                            console.log('595', err);
                         }
 
                     })
@@ -632,7 +625,6 @@ export default async function ($element, layout) {
                         await enigma.app.destroySessionObject(id);
                     }
                     catch (err) {
-                        console.log(err);
                     }
                 }
 
