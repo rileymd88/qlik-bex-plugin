@@ -2,7 +2,6 @@
 
 ## The Solution
 The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and brings Governed Self Service within SAP BI environments to the next level.
-
 * It provides an easy way to access data for SAP Bex Users
 * It seamlessly integrates Qlik into your exisisting SAP landscape
 * It is an extension which can be accessed through the Qlik standard client. Support can be delivered by Qlik Consulting or any Qlik Partner
@@ -15,26 +14,22 @@ The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and bring
 The Qlik BEx Plugin has been tested within the following setups
 
 **Qlik Sense Enterprise**
-
 * April 2018
 * June 2018
 * September 2018
 * November 2018
 
 **Browsers**
-
 * Google Chrome
 * Mozilla Firefox
 * Internet Explorer 11
 
 **Qlik Connector for SAP**
-
 * 7.0.0
 * 7.0.1
 
 ### Limitations
 *The BEx Plugin uses the Qlik SAP BAPI Connector + the Qlik SAP BEx Connector to retrieve Metadata and Data from SAP. All limitations from those 2 components do apply to the BEx Plugin too. (see BEx Limitations)
-
 * The wizard might not be able to generate valid data load scripts for all kind of BEx query setups (specials types of variables/hierarchies)
 
 #### Step by Step Installation Instruction
@@ -92,7 +87,6 @@ The Qlik BEx Plugin has been tested within the following setups
 ![BEX5](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx5.PNG)
 5. Go ahead and select your query, dimensions and measures
 ![BEX6](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx6.PNG)
-
 6. Then enter your variables by either manually typing in the values or by clicking on the search icon to search for your values. Mandatory variables are marked in bold.
 ![BEX7](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx7.PNG
 7. Click on next and load the data
