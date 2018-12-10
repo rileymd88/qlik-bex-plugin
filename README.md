@@ -87,6 +87,7 @@ The Qlik BEx Plugin has been tested within the following setups
 3. Create a new sheet and drag the BEx plugin onto the canvas
 
 ![BEX4](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx4.png)
+
 4. Click on setup
     a. The one time setup screen appears (you can re-enter it by using the extension properties option)
     b. note that the Connection and the Metadata App are automatically filled. The Plugin searches for BEx data connections for apps containing the phrase "meta" within the app description (not the app name)
