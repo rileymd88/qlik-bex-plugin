@@ -107,8 +107,7 @@
         <div id="step2Header" class="lui-dialog__body pluginHeader">
           <div class="headerDescription">
             <h1>Select Variables</h1>
-            <p>Please select your Variables. It is possible to select multipe values. If you would like to check your selected
-              variables you can click on Validate Variables. Once you are finished with your selections you can run the Query
+            <p>Please select your Variables. It is possible to select multipe values. Once you are finished with your selections you can run the Query
               by clicking Next.
               <br>
               <br>
@@ -152,7 +151,7 @@
                 <tr>
                   <td>
                     <div id="qdcLoader" class="loader"></div>
-                    <svg  id="reloadSuccess" class="reloadCheck" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+<!--                     <svg  id="reloadSuccess" class="reloadCheck" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
                       <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
                       <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
                     </svg>
@@ -160,7 +159,7 @@
                       <circle class="path circle" fill="none" stroke="#D06079" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
                       <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3"/>
                       <line class="path line" fill="none" stroke="#D06079" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" x2="34.4" y2="92.2"/>
-                    </svg>
+                    </svg> -->
                     <timer><time>00:00:00</time></timer>
                   </td>
                   <td>
@@ -175,16 +174,25 @@
         </div>
 
         <!-- /Step 3 Dialog -->
-
-
         <div id="step1Footer" class="lui-dialog__footer">
           <button id="resetSelections" class="lui-button  lui-dialog__button">Reset Selections</button>
           <button id="clearSelections" class="lui-button  lui-dialog__button">Clear Selections</button>
+          <label id ="qbpBookmarkLabel" class="lui-checkbox">
+            <input class="lui-checkbox__input" type="checkbox" aria-label="Label" />
+            <div class="lui-checkbox__check-wrap">
+              <span id="qbpBookmarkCheck" class="lui-checkbox__check"></span>
+              <span class="lui-checkbox__check-text">Save as Bookmark</span>
+            </div>
+          </label>
+          <input id="qbpBookmarkName" class="lui-input" placeholder="Bookmark Name" value=""></input>
           <button id="validateVariables" class="lui-button  lui-dialog__button">Validate Variables</button>
           <button id="backButton" class="lui-button  lui-dialog__button">Back to Query Selection</button>
+          <button id="backButtonVar" class="lui-button  lui-dialog__button">Back to Variable Selection</button>
           <button id="dialogCancel" class="lui-button  lui-dialog__button">Cancel</button>
+          <button id="dialogClose" class="lui-button  lui-dialog__button lui-button--success">Close</button>
           <button id="dialogNext" class="lui-button  lui-dialog__button lui-button--success">Next</button>
           <button id="goToSheet" class="lui-button  lui-dialog__button">Go to Sheet</button>
+          <button id="goToInsights" class="lui-button  lui-dialog__button lui-button--success">Jump to Insights</button>
           <button id="cancelScript" class="lui-button  lui-dialog__button lui-button--success">Cancel</button>
         </div>
         </div>

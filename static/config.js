@@ -9,6 +9,7 @@ var config = {
 // Config for SAP Meta Data app
 var qdcConfig = {
 	appId: "f1c582fe-792a-4340-8cfa-8ccd968c1f27",
+	bookmarkSheetId: "6f5f466c-8f7e-4c6c-bd1f-ebc33a72a035",
 	bexQueryDesc: "qyJyLCx",
 	dimensions: "aKkvJ",
 	measures: "CKhWABg"

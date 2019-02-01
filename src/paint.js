@@ -10,6 +10,8 @@ var setupOn = false;
 var dialogStatus = 0;
 var qdcApp;
 var bexConnection = '';
+var reloadId = '';
+var ranReloadAlready = false;
 
 
 export default async function ($element, layout) {
@@ -193,9 +195,47 @@ export default async function ($element, layout) {
                     $('#resetSelections').show();
                     $('#clearSelections').show();
                     $('#qdcTableContent').empty();
+                    $("#qbpBookmarkLabel").hide();
+                    $("#qbpBookmarkName").hide();
                     $(this).hide();
                     getFilters();
+
                 })
+
+                $("#backButtonVar").on('click', async function () {
+                    $("#dialogCancel").show();
+                    $("#goToInsights").hide();
+                    $("#goToSheet").hide();
+                    $(".dialogReload").hide();
+                    $("#cancelledReloadMsg").remove();
+                    $("#dialogClose").hide();
+                    $("#backButtonVar").hide();
+                    $("#step3Header").hide();
+                    $("#dialogNext").show();
+                    $("#backButton").show();
+                    $("#step2Header").show();
+                    $("#step2Content").show();
+                    $("#qbpBookmarkLabel").show();
+                    $("#qbpBookmarkName").show();
+                    $("#reloadStatus").empty();
+                    //$("#validateVariables").show();
+                    dialogStatus = 2
+                })
+
+                $("#dialogClose").on('click', async function () {
+                    $("#pluginDialogBackground").remove();
+                    $("#pluginDialog").remove();
+                    $("#reloadStatus").empty();
+                })
+
+                $("#goToInsights").on('click', async function () {
+                    var url = window.location.href;
+                    var urlList = url.split("/");
+                    var sheetId = urlList[7];
+                    window.location = 'https://' + config.host + "/sense/app/" + app.id + "/sheet/" + sheetId + "/state/insight";
+                })
+
+
 
                 // Listener to close Dialog
                 $("#dialogCancel").on('click', function () {
@@ -334,7 +374,7 @@ export default async function ($element, layout) {
                                 var filterPane = await createVariableFilters(techVarName);
                                 createVariableDialog(filterPane, techVarName, lowHigh);
                             }
-                        
+
                             catch (err) {
                             }
                         })
@@ -347,9 +387,11 @@ export default async function ($element, layout) {
                 }
 
                 async function createVariableOptions(techVarName, i) {
-                    var friendlyVarName = await getStringExpression(`=Concat({<VAR_NAM_FINAL={"${techVarName}"}>}distinct DESCRIPTION_VARIABLE)`);
-                    var varType = await getValueExpression(`=Concat({<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_SELC_TYPE)`);
-                    var varMandatory = await getValueExpression(`=Concat({<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_ENTRY_TYPE)`)
+                    var friendlyVarName = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DESCRIPTION_VARIABLE)`);
+                    var varType = await getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_SELC_TYPE)`);
+                    var varMandatory = await getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_ENTRY_TYPE)`);
+                    var defaultLow = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_LOW)`);
+                    var defaultHigh = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_HIGH)`);
                     $('#qdcTable').append(`<tr id="qdcVariable${i}" class="qdcTr"><td id=qdcTd${i} class="qdcTd">${friendlyVarName}</td></tr>`);
                     $(`#qdcVariable${i}`).append(`<td id="qdcTd${i}"class="qdcTd"><select id="qdcInput${i}" class="operation lui-select"></td>`);
                     switch (varType) {
@@ -397,11 +439,11 @@ export default async function ($element, layout) {
                             break;
                     }
 
-                    $(`#qdcVariable${i}`).append(`<td id="varTd${i}"class="qdcTd"><input id="varInput${techVarName}" class="lui-input variable" placeholder="VALUE"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span></td>`);
+                    $(`#qdcVariable${i}`).append(`<td id="varTd${i}"class="qdcTd"><input id="varInput${techVarName}" class="lui-input variable" placeholder="VALUE" value="${defaultLow}"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span></td>`);
                     if (varType == 2) {
                         $(`#varTd${i}`).empty();
-                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
-                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
+                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true">${defaultLow}</span>`);
+                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true">${defaultHigh}</span>`);
                     }
 
                     // Listener for selection of an operation type
@@ -425,22 +467,22 @@ export default async function ($element, layout) {
                     // Update UI Based on Variables Part 1 
                     for (var i = 0; i < variableValueList.length; i++) {
                         if (variableValueList[i].variable == techVarName) {
-                            var parentId = await $(`#varInput${variableValueList[i].variable}`).parent().attr('id');
-                            var id = await parentId.replace('varTd', '');
+                            var parentId = $(`#varInput${variableValueList[i].variable}`).parent().attr('id');
+                            var id = parentId.replace('varTd', '');
                             if (variableValueList[i].variableMode == 'BT') {
-                                await $(`#varTd${id}`).empty();
-                                await $(`#varTd${id}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
-                                await $(`#varTd${id}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
+                                $(`#varTd${id}`).empty();
+                                $(`#varTd${id}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
+                                $(`#varTd${id}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
                             }
-                            await $(`#qdcInput${id}`).val(variableValueList[i].variableMode);
-                            await $(`#qdcInput${id}`).data('pre', variableValueList[i].variableMode);
+                            $(`#qdcInput${id}`).val(variableValueList[i].variableMode);
+                            $(`#qdcInput${id}`).data('pre', variableValueList[i].variableMode);
                         }
                     }
                     // Update UI Based on Variables Part 2
                     for (var i = 0; i < variableValueList.length; i++) {
                         if (variableValueList[i].variable == techVarName) {
-                            var variablesForInput = await JSON.stringify(variableValueList[i].variableValue);
-                            variablesForInput = await variablesForInput.replace(/,/g, ";").replace(/"/g, "").replace(/[\[\]']+/g, '');
+                            var variablesForInput = JSON.stringify(variableValueList[i].variableValue);
+                            variablesForInput = variablesForInput.replace(/,/g, ";").replace(/"/g, "").replace(/[\[\]']+/g, '');
                             if (variableValueList[i].variableHighLow == 'LOW') {
                                 $(`#varInput${techVarName}.lui-input.variableLow`).val(variablesForInput);
                             }
@@ -489,7 +531,6 @@ export default async function ($element, layout) {
                         }
                         // Update UI with new list
                         stringList = JSON.stringify(finalVariablesList).replace(/"/g, '').replace(/;+/g, ',').replace('[', '').replace(']', '');
-
                         element.val(stringList);
                         resolve(true);
                     })
@@ -538,7 +579,7 @@ export default async function ($element, layout) {
                     return new Promise(function (resolve, reject) {
                         qdcApp.visualization.create(
                             'listbox',
-                            [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP, null())`],
+                            [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP & '|' & MEM_NAM, null())`],
                             {}
                         ).then(function (vis) {
                             resolve(vis);
@@ -625,7 +666,8 @@ export default async function ($element, layout) {
                 // function to create bookmarks button
                 async function createBookmark(bookmarkName) {
                     try {
-                        await qdcApp.bookmark.create(bookmarkName, variableValueList, qdcConfig.bookmarkSheetId);
+                        var variableValueList = await getQueryVariables();
+                        await qdcApp.bookmark.create(bookmarkName, JSON.stringify(variableValueList), qdcConfig.bookmarkSheetId);
                     }
                     catch (err) {
                     }
@@ -659,37 +701,51 @@ export default async function ($element, layout) {
                     var dimensionsList = [];
                     var measuresList = [];
 
-                    // Determine which fields are dimensions or measures
-                    var arrayLength = reply.layout.qFieldList.qItems.length;
-                    for (var i = 0; i < arrayLength; i++) {
-                        var tagArray = reply.layout.qFieldList.qItems[i].qTags.length;
-                        for (var t = 0; t < tagArray; t++) {
-                            if (reply.layout.qFieldList.qItems[i].qTags[t] == "$dimension") {
-                                dimensionsList.push(reply.layout.qFieldList.qItems[i].qName)
-                            }
-                            if (reply.layout.qFieldList.qItems[i].qTags[t] == "$measure") {
-                                measuresList.push(reply.layout.qFieldList.qItems[i].qName)
-                            }
-                        }
-                    }
-
                     // Get query name in order to make selection
                     var queryNameList = [];
                     var currentScript = await enigma.app.getScript();
                     var queryNameFromScript = currentScript.split("QUERYNAME");
+
                     if (queryNameFromScript[1]) {
-                        var queryName = await getStringExpression(`=Concat({<QUERY_NAME={${queryNameFromScript[1]}}>}distinct DESCRIPTION_QUERY)`);
+                        var queryName = await getStringExpression(`=Concat({<QUERY_NAME={'${queryNameFromScript[1]}'}>}distinct QUERY_DESC_NAME)`);
                         queryNameList.push(queryName);
+                    }
+
+                    // Determine which fields are dimensions or measures
+                    var arrayLength = reply.layout.qFieldList.qItems.length;
+                    for (var i = 0; i < arrayLength; i++) {
+                        var tagArray = await reply.layout.qFieldList.qItems[i].qTags.length;
+                        for (var t = 0; t < tagArray; t++) {
+                            if (reply.layout.qFieldList.qItems[i].qTags[t] == "$dimension") {
+                                dimensionsList.push(reply.layout.qFieldList.qItems[i].qName);
+                            }
+                            if (reply.layout.qFieldList.qItems[i].qTags[t] == "$measure") {
+                                measuresList.push(reply.layout.qFieldList.qItems[i].qName);
+                            }
+                        }
+                    }
+                    var finalDimList = [];
+                    var finalMesList = [];
+                    for (var d = 0; d < dimensionsList.length; d++) {
+                        var dim1 = await getStringExpression(`=Concat({<DIM_CAP={'${dimensionsList[d]}'},QUERY_NAME={'${queryNameFromScript[1]}'} >}distinct DIM_CAP_NAM)`);
+                        finalDimList.push(dim1);
+                        console.log(finalDimList);
+                    }
+                    for (var m = 0; m < measuresList.length; m++) {
+                        var mes1 = await getStringExpression(`=Concat({<MES_CAP={'${measuresList[m]}'},QUERY_NAME={'${queryNameFromScript[1]}'}>}distinct MES_CAP_NAM)`);
+                        finalMesList.push(mes1);
                     }
 
                     // Make selections
                     if (dimensionsList.length >= 1 || measuresList.length >= 1 || queryNameList.length >= 2) {
                         try {
-                            await qdcApp.field("DIM_CAP").selectValues(dimensionsList, false, true);
-                            await qdcApp.field("MES_CAP").selectValues(measuresList, false, true);
-                            await qdcApp.field("DESCRIPTION_QUERY").selectValues(queryNameList, false, true);
+                            console.log(finalDimList, finalMesList);
+                            await qdcApp.field("QUERY_DESC_NAME").selectValues(queryNameList, false, true);
+                            await qdcApp.field("DIM_CAP_NAM").selectValues(finalDimList, false, true);
+                            await qdcApp.field("MES_CAP_NAM").selectValues(finalMesList, false, true);
                         }
                         catch (err) {
+                            console.log(err);
                         }
                     }
                 }
@@ -976,34 +1032,7 @@ export default async function ($element, layout) {
                             vStopLoadDialog = true;
                         }, 10000);
 
-                        // Reload Progress Information.
-                        var progress = setInterval(function () {
-                            if (reloadDone != true) {
-                                enigma.global.getProgress(5).then(function (msg) {
-                                    if (msg.qPersistentProgress) {
-                                        var persistentProgress = msg.qPersistentProgress;
-                                        var text = msg.qPersistentProgress;
-                                        $("#reloadStatus").append(text + '\n');
-                                        if (msg.qErrorData.length > 0) {
-                                            $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
-                                            var scriptError = true;
-                                        }
-                                    } else if (msg.qErrorData.length > 0) {
-                                        $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
-                                        var scriptError = true;
-                                    } else {
-                                        if (msg.qTransientProgress) {
-                                            var text2 = persistentProgress + ' <-- ' + msg.qTransientProgress;
-                                            $("#reloadStatus").append(text2 + '\n');
-                                        }
-                                    }
-                                })
 
-                            } else {
-                                clearInterval(progress)
-                            }
-
-                        }, 100);
 
                     } catch (err) {
                     }
@@ -1017,30 +1046,68 @@ export default async function ($element, layout) {
                                 await enigma.app.global.cancelReload();
                                 $("#qdcModal").remove();
                                 $("#qdcLoadDialog").remove();
-                                $("#cancelScript").html('OK');
-                                $("#reloadStatus").append('You canceled your reload');
+                                $("#cancelScript").hide();
+                                $("#dialogClose").show();
+                                $("#backButtonVar").show();
+                                clearTimeout(t);
+                                $("#qdcLoader").hide();
+                                $(".dialogReload").hide();
+                                $("#reloadStatus").empty();
                                 reloadDone = true;
-                            }
-                            else {
-                                $("#qdcModal").remove();
-                                $("#qdcLoadDialog").remove();
-                                var url = window.location.href;
-                                var urlList = url.split("/");
-                                var sheetId = urlList[7];
-                                window.location = 'https://' + config.host + "/sense/app/" + app.id + "/sheet/" + sheetId + "/state/insight";
+                                ranReloadAlready = true;
                             }
                         })
                         $("#goToSheet").click(function () {
                             $("#pluginDialogBackground").remove();
                             $("#pluginDialog").remove();
+                            $("#reloadStatus").empty();
                         })
-                        await enigma.app.doReload(0, 0, false);
-                        await enigma.app.doSave();
+                        var reload = enigma.app.doReload(0, 0, false);
+                        reloadId = reload.requestId;
+
+                        // Reload Progress Information.
+                        var intervalTimes = 0;
+                        var progress = setInterval(function () {
+                            if (reloadDone != true) {
+                                enigma.global.getProgress(reloadId).then(function (msg) {
+                                    if (intervalTimes == 0 && ranReloadAlready == true) {
+                                        intervalTimes = 1;
+                                    }
+                                    else {
+                                        if (msg.qPersistentProgress) {
+                                            var persistentProgress = msg.qPersistentProgress;
+                                            var text = msg.qPersistentProgress;
+                                            $("#reloadStatus").append(text + '\n');
+                                            if (msg.qErrorData.length > 0) {
+                                                $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
+                                                var scriptError = true;
+                                            }
+                                        } else if (msg.qErrorData.length > 0) {
+                                            $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
+                                            var scriptError = true;
+                                        } else {
+                                            if (msg.qTransientProgress) {
+                                                var text2 = persistentProgress + ' <-- ' + msg.qTransientProgress;
+                                                $("#reloadStatus").append(text2 + '\n');
+                                            }
+                                        }
+                                    }
+                                })
+
+                            } else {
+                                clearInterval(progress)
+                            }
+
+                        }, 100);
+                        await reload;
                         reloadDone = true;
+                        ranReloadAlready = true;
 
                         // Stopping Timer
                         clearTimeout(t);
                         $("#qdcLoader").hide();
+                        $("#backButtonVar").show();
+
                         if (scriptError == true) {
                             $("#reloadFailure").show();
                             $("#reloadStatus").append('<p style="color: red;">Error: Something went wrong!</p>');
@@ -1048,8 +1115,10 @@ export default async function ($element, layout) {
                             $("#reloadSuccess").show();
                             $("#reloadStatus").append('<p style="color: green;">Your app reloaded sucessfully!</p>');
                         }
+                        $("#cancelScript").hide();
+                        $("#dialogNext").hide();
                         $("#goToSheet").show();
-                        $("#cancelScript").html('Jump to Insights');
+                        $("#goToInsights").show();
                     }
                     catch (err) {
                     }
@@ -1184,7 +1253,7 @@ export default async function ($element, layout) {
                             break;
                         // From Query Selection Screen -> Variable Selection
                         case 1:
-                            var goToVariableSelections = await getValueExpression('=If(GetSelectedCount(DESCRIPTION_QUERY) = 1 and GetSelectedCount(DIM_CAP) > 0 and GetSelectedCount(MES_CAP) > 0, 1, 0)')
+                            var goToVariableSelections = await getValueExpression('=If(GetSelectedCount(QUERY_DESC_NAME) = 1 and GetSelectedCount(DIM_CAP_NAM) > 0 and GetSelectedCount(MES_CAP_NAM) > 0, 1, 0)')
                             if (goToVariableSelections == 1) {
                                 $("#step1Header").hide();
                                 $("#step1Content").hide();
@@ -1193,6 +1262,8 @@ export default async function ($element, layout) {
                                 $("#backButton").show();
                                 $("#step2Header").show();
                                 $("#step2Content").show();
+                                $("#qbpBookmarkLabel").show();
+                                $("#qbpBookmarkName").show();
                                 //$("#validateVariables").show();
                                 await createVariableTable();
                                 dialogStatus = 2
@@ -1208,6 +1279,16 @@ export default async function ($element, layout) {
 
                         // From Variable Selection -> App Loading
                         case 2:
+                            var checkBox = document.querySelectorAll(".lui-checkbox .lui-checkbox__input:checked");
+                            if (checkBox.len = 1) {
+                                if ($("#qbpBookmarkName").val() != "") {
+                                    createBookmark($("#qbpBookmarkName").val())
+                                }
+                                else {
+
+                                }
+                            }
+                            $(".dialogReload").show();
                             $("#backButton").hide();
                             $("#step2Header").hide();
                             $("#step2Content").hide();
@@ -1217,6 +1298,9 @@ export default async function ($element, layout) {
                             $("#step3Header").show();
                             $("#step3Content").show();
                             $("#cancelScript").show();
+                            $("#qdcLoader").show();
+                            $("#qbpBookmarkLabel").hide();
+                            $("#qbpBookmarkName").hide();
                             startExec();
                             dialogStatus = 3;
                             break;

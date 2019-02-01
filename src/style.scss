@@ -479,6 +479,30 @@ svg {
     display: none;
 }
 
+#dialogClose {
+    display: none;
+}
+
+#backButtonVar {
+    display: none;
+}
+
+#goToInsights {
+    display: none;
+}
+
+#qbpBookmarkLabel {
+    display: none;
+    float: left;
+    padding-right: 16px;
+}
+
+#qbpBookmarkName {
+    display: none;
+    float: left;
+    width: 25%;
+}
+
 #resetSelections {
     display: none;
     float: left;
