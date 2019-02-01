@@ -21,8 +21,6 @@ export default async function ($element, layout) {
         $('#setupLogoContainer').show();
     }
 
-
-
     // Only run through here if page has not been rendered before
     if (!rendered) {
         rendered = true;
@@ -49,10 +47,6 @@ export default async function ($element, layout) {
                 $('#setupLogoContainer').hide();
             }
         }
-
-
-
-
 
         function setupButton() {
             $element.append('<div id="setupContainer" class="setupContainer"></div>');
@@ -892,10 +886,13 @@ export default async function ($element, layout) {
                     for (var i = 0; i < dimensionsList.length; i++) {
                         var dimensionTech = dimensionsList[i].trim().replace("[", "'").replace("]", "'");
                         var dimension = await getStringExpression(`=Concat({<DIM_NAM={${dimensionTech}}>}distinct DIM_CAP)`)
+                        var dimensionText = `${dimension} Text`;
                         script += `tag field [${dimension}] with $dimension;\n`;
+                        script += `tag field [${dimension} Text] with $dimension;\n`;
                         varDimensions.push(`[${dimension}]`);
                         if (layout.masterItems == true) {
                             createDimension(dimension);
+                            createDimension(dimensionText);
                         }
                     }
                     await createVariables('vDimensionList', varDimensions.join(", "));
@@ -1129,11 +1126,11 @@ export default async function ($element, layout) {
                         $("#qdcLoadDialogContent").find('.lui-label').remove();
                         $("#qdcLoadDialogContent").find('.lui-select').remove();
                         $("#qdcLoadDialogContent").find('.lui-input').remove();
-                        customConnectionString = `CUSTOM CONNECT TO "provider=QvSAPBExConnector.exe;servertype=${server};ASHOST=${host};CLIENT=${client};SYSNR=${systemNr};`;
+                        var customConnectionString = `CUSTOM CONNECT TO "provider=QvSAPBExConnector.exe;servertype=${server};ASHOST=${host};CLIENT=${client};SYSNR=${systemNr};`;
                         customConnectionString += `LANG=${language};Timeout=3600;SNC_MODE=false;SNC_QOP=9;"`;
 
-                        currentUser = await getUserName(global);
-                        connectionParams = {
+                        var currentUser = await getUserName(global);
+                        var connectionParams = {
                             "qConnection": {
                                 "qId": "",
                                 "qName": `SAP BEx (${currentUser})`,
@@ -1150,7 +1147,7 @@ export default async function ($element, layout) {
                         }
                         try {
                             $('#qdcLoaderConn').show();
-                            connection = await enigma.app.createConnection(connectionParams);
+                            var connection = await enigma.app.createConnection(connectionParams);
                             $('#qdcLoaderConn').hide();
                             $("#qdcLoadDialogContentConn").text(`Your SAP ${name} Connection was created sucessfully!`);
                             $("#saveConnectionButton").hide();
