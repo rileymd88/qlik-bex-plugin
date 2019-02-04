@@ -143,7 +143,7 @@ export default async function ($element, layout) {
                 else {
                     // Start with Variable if the setting is variable
                     await setDimAndMeasureSelection();
-                    var goToVariableSelections = await getValueExpression('=If(GetSelectedCount(DESCRIPTION_QUERY) = 1 and GetSelectedCount(DIM_CAP) > 0 and GetSelectedCount(MES_CAP) > 0, 1, 0)')
+                    var goToVariableSelections = await getValueExpression('=If(GetSelectedCount(QUERY_DESC_NAME) = 1 and GetSelectedCount(DIM_CAP_NAM) > 0 and GetSelectedCount(MES_CAP_NAM) > 0, 1, 0)')
                     if (layout.bexStartingPoint == 2 && scriptSapCheck == true && goToVariableSelections == 1) {
                         dialogStatus = 2;
                         $("body").append(dialog);
@@ -579,7 +579,7 @@ export default async function ($element, layout) {
                     return new Promise(function (resolve, reject) {
                         qdcApp.visualization.create(
                             'listbox',
-                            [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP & '|' & MEM_NAM, null())`],
+                            [`=If(VAR_NAM_FINAL = '${techVarName}', MEM_CAP & ' | ' & MEM_NAM, null())`],
                             {}
                         ).then(function (vis) {
                             resolve(vis);
@@ -729,7 +729,6 @@ export default async function ($element, layout) {
                     for (var d = 0; d < dimensionsList.length; d++) {
                         var dim1 = await getStringExpression(`=Concat({<DIM_CAP={'${dimensionsList[d]}'},QUERY_NAME={'${queryNameFromScript[1]}'} >}distinct DIM_CAP_NAM)`);
                         finalDimList.push(dim1);
-                        console.log(finalDimList);
                     }
                     for (var m = 0; m < measuresList.length; m++) {
                         var mes1 = await getStringExpression(`=Concat({<MES_CAP={'${measuresList[m]}'},QUERY_NAME={'${queryNameFromScript[1]}'}>}distinct MES_CAP_NAM)`);
@@ -739,13 +738,11 @@ export default async function ($element, layout) {
                     // Make selections
                     if (dimensionsList.length >= 1 || measuresList.length >= 1 || queryNameList.length >= 2) {
                         try {
-                            console.log(finalDimList, finalMesList);
                             await qdcApp.field("QUERY_DESC_NAME").selectValues(queryNameList, false, true);
                             await qdcApp.field("DIM_CAP_NAM").selectValues(finalDimList, false, true);
                             await qdcApp.field("MES_CAP_NAM").selectValues(finalMesList, false, true);
                         }
                         catch (err) {
-                            console.log(err);
                         }
                     }
                 }
