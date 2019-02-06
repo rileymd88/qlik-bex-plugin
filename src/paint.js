@@ -218,6 +218,8 @@ export default async function ($element, layout) {
                     $("#qbpBookmarkLabel").show();
                     $("#qbpBookmarkName").show();
                     $("#reloadStatus").empty();
+                    $("#reloadSuccess").hide();
+                    $("#reloadFailure").hide();
                     //$("#validateVariables").show();
                     dialogStatus = 2
                 })
@@ -387,11 +389,16 @@ export default async function ($element, layout) {
                 }
 
                 async function createVariableOptions(techVarName, i) {
-                    var friendlyVarName = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DESCRIPTION_VARIABLE)`);
-                    var varType = await getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_SELC_TYPE)`);
-                    var varMandatory = await getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_ENTRY_TYPE)`);
-                    var defaultLow = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_LOW)`);
-                    var defaultHigh = await getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_HIGH)`);
+                    var friendlyVarNameProm = getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DESCRIPTION_VARIABLE)`);
+                    var varTypeProm = getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_SELC_TYPE)`);
+                    var varMandatoryProm = getValueExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct VAR_ENTRY_TYPE)`);
+                    var defaultLowProm = getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_LOW)`);
+                    var defaultHighProm = getStringExpression(`=Concat({1<VAR_NAM_FINAL={"${techVarName}"}>}distinct DEFAULT_HIGH)`);
+                    var friendlyVarName = await friendlyVarNameProm;
+                    var varType = await varTypeProm;
+                    var varMandatory = await varMandatoryProm;
+                    var defaultLow = await defaultLowProm;
+                    var defaultHigh = await defaultHighProm;
                     $('#qdcTable').append(`<tr id="qdcVariable${i}" class="qdcTr"><td id=qdcTd${i} class="qdcTd">${friendlyVarName}</td></tr>`);
                     $(`#qdcVariable${i}`).append(`<td id="qdcTd${i}"class="qdcTd"><select id="qdcInput${i}" class="operation lui-select"></td>`);
                     switch (varType) {
@@ -592,10 +599,17 @@ export default async function ($element, layout) {
                     await qdcApp.field('VAR_NAM_FINAL').clear();
                     $("body").append(varHtml);
                     filterPane.show($("#qdcVariableDialogContent"));
-                    $("#cancelVariableDialog").click(function () {
+                    $("#cancelVariableDialog").click(async function () {
                         $("#qdcVariableModal").remove();
                         $("#qdcVariableDialog").remove();
-                        destroyObject(filterPane.id)
+                        try {
+                            await qdcApp.field('MEM_CAP').clear();
+                            await qdcApp.field('MEM_NAM').clear();
+                            await qdcApp.field('VAR_NAM_FINAL').clear();
+                            destroyObject(filterPane.id);
+                        }
+                        catch (err) {
+                        }
                     })
                     $("#saveVariableDialog").click(async function () {
                         $("#qdcVariableModal").remove();
@@ -615,6 +629,8 @@ export default async function ($element, layout) {
                         $(`${selector}`).val(selections);
                         try {
                             await qdcApp.field('MEM_CAP').clear();
+                            await qdcApp.field('MEM_NAM').clear();
+                            await qdcApp.field('VAR_NAM_FINAL').clear();
                             destroyObject(filterPane.id);
                         }
                         catch (err) {
@@ -749,9 +765,7 @@ export default async function ($element, layout) {
 
                 // Listener for create app simple
                 async function startExec() {
-                    if (variableValueList.length < 1) {
-                        variableValueList = await getQueryVariables();
-                    }
+                    variableValueList = await getQueryVariables();
                     createFinalApp();
                 }
 
@@ -828,7 +842,6 @@ export default async function ($element, layout) {
                         await getQueryVariables();
                     }
                     // create script with local settings from config
-                    var scriptError = false;
                     var script = '';
                     script += localsettings;
                     script += "///$tab Qlik BEx Plugin Config\r\n";
@@ -1028,7 +1041,41 @@ export default async function ($element, layout) {
                         setTimeout(() => {
                             vStopLoadDialog = true;
                         }, 10000);
+                        var reloadDone = false;
+                        var intervalTimes = 0;
+                        var ranReloadAlready = false;
 
+                        // Reload Progress Information.
+                        var progress = setInterval(function () {
+                            if (reloadDone != true) {
+                                enigma.global.getProgress(5).then(function (msg) {
+                                    if (intervalTimes == 0 && ranReloadAlready == true) {
+                                        intervalTimes = 1;
+                                    }
+                                    else {
+                                        if (msg.qPersistentProgress) {
+                                            var persistentProgress = msg.qPersistentProgress;
+                                            var text = msg.qPersistentProgress;
+                                            $("#reloadStatus").append(text + '\n');
+                                            if (msg.qErrorData.length > 0) {
+                                                $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
+                                            }
+                                        } else if (msg.qErrorData.length > 0) {
+                                            $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
+                                        } else {
+                                            if (msg.qTransientProgress) {
+                                                var text2 = persistentProgress + ' <-- ' + msg.qTransientProgress;
+                                                $("#reloadStatus").append(text2 + '\n');
+                                            }
+                                        }
+                                    }
+                                })
+
+                            } else {
+                                clearInterval(progress)
+                            }
+
+                        }, 100);
 
 
                     } catch (err) {
@@ -1036,7 +1083,7 @@ export default async function ($element, layout) {
 
                     // Reload app using enigma app API
                     try {
-                        var reloadDone = false;
+
                         $("#cancelScript").click(async function () {
                             if (reloadDone == false) {
                                 // Cancel reload
@@ -1059,63 +1106,47 @@ export default async function ($element, layout) {
                             $("#pluginDialog").remove();
                             $("#reloadStatus").empty();
                         })
-                        var reload = enigma.app.doReload(0, 0, false);
-                        reloadId = reload.requestId;
 
-                        // Reload Progress Information.
-                        var intervalTimes = 0;
-                        var progress = setInterval(function () {
-                            if (reloadDone != true) {
-                                enigma.global.getProgress(reloadId).then(function (msg) {
-                                    if (intervalTimes == 0 && ranReloadAlready == true) {
-                                        intervalTimes = 1;
-                                    }
-                                    else {
-                                        if (msg.qPersistentProgress) {
-                                            var persistentProgress = msg.qPersistentProgress;
-                                            var text = msg.qPersistentProgress;
-                                            $("#reloadStatus").append(text + '\n');
-                                            if (msg.qErrorData.length > 0) {
-                                                $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
-                                                var scriptError = true;
-                                            }
-                                        } else if (msg.qErrorData.length > 0) {
-                                            $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
-                                            var scriptError = true;
-                                        } else {
-                                            if (msg.qTransientProgress) {
-                                                var text2 = persistentProgress + ' <-- ' + msg.qTransientProgress;
-                                                $("#reloadStatus").append(text2 + '\n');
-                                            }
-                                        }
-                                    }
-                                })
-
+                        var reload = await enigma.app.doReload(0, 0, false);
+                        enigma.global.getProgress(5).then(function (msg) {
+                            if (msg.qPersistentProgress) {
+                                var persistentProgress = msg.qPersistentProgress;
+                                var text = msg.qPersistentProgress;
+                                $("#reloadStatus").append(text + '\n');
+                                if (msg.qErrorData.length > 0) {
+                                    $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
+                                }
+                            } else if (msg.qErrorData.length > 0) {
+                                $("#reloadStatus").append(msg.qErrorData[0].qErrorString + '\n');
                             } else {
-                                clearInterval(progress)
+                                if (msg.qTransientProgress) {
+                                    var text2 = persistentProgress + ' <-- ' + msg.qTransientProgress;
+                                    $("#reloadStatus").append(text2 + '\n');
+                                }
+                            }
+                            reloadDone = true;
+                            ranReloadAlready = true;
+
+
+                            // Stopping Timer
+                            clearTimeout(t);
+                            $("#qdcLoader").hide();
+                            $("#backButtonVar").show();
+                            if (reload != true) {
+                                $("#reloadFailure").show();
+                                $("#reloadStatus").append('<p style="color: red;">Error: Something went wrong!</p>');
+                                $("#cancelScript").hide();
+                                $("#dialogClose").show();
+                            } else {
+                                $("#reloadSuccess").show();
+                                $("#reloadStatus").append('<p style="color: green;">Your app reloaded sucessfully!</p>');
+                                $("#cancelScript").hide();
+                                $("#dialogNext").hide();
+                                $("#goToSheet").show();
+                                $("#goToInsights").show();
                             }
 
-                        }, 100);
-                        await reload;
-                        reloadDone = true;
-                        ranReloadAlready = true;
-
-                        // Stopping Timer
-                        clearTimeout(t);
-                        $("#qdcLoader").hide();
-                        $("#backButtonVar").show();
-
-                        if (scriptError == true) {
-                            $("#reloadFailure").show();
-                            $("#reloadStatus").append('<p style="color: red;">Error: Something went wrong!</p>');
-                        } else {
-                            $("#reloadSuccess").show();
-                            $("#reloadStatus").append('<p style="color: green;">Your app reloaded sucessfully!</p>');
-                        }
-                        $("#cancelScript").hide();
-                        $("#dialogNext").hide();
-                        $("#goToSheet").show();
-                        $("#goToInsights").show();
+                        })
                     }
                     catch (err) {
                     }
