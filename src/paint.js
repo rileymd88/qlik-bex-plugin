@@ -292,9 +292,7 @@ export default async function ($element, layout) {
                             vis.show("filterHolder0");
                             //Asks if Browser is IE
                             var isIE = false || !!document.documentMode;
-                            if (isIE == true) {
-                                waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
-                            }
+                            waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
                         });
                     }
 
@@ -314,9 +312,7 @@ export default async function ($element, layout) {
                     // deletes Class spark if a selection has been made - IE11 display bug
                     qdcApp.getList("SelectionObject", function (x) {
                         var isIE = false || !!document.documentMode;
-                        if (isIE == true) {
-                            waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
-                        };
+                        waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
                     });
                 };
 
@@ -449,8 +445,8 @@ export default async function ($element, layout) {
                     $(`#qdcVariable${i}`).append(`<td id="varTd${i}"class="qdcTd"><input id="varInput${techVarName}" class="lui-input variable" placeholder="VALUE" value="${defaultLow}"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span></td>`);
                     if (varType == 2) {
                         $(`#varTd${i}`).empty();
-                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true">${defaultLow}</span>`);
-                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true">${defaultHigh}</span>`);
+                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableLow" value="${defaultLow}" placeholder="LOW"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
+                        $(`#varTd${i}`).append(`<input id="varInput${techVarName}" class="lui-input variableHigh" value="${defaultHigh}" placeholder="HIGH"/><span id=searchButton${i} value="${techVarName}" class="lui-icon lui-icon--large lui-icon--search" aria-hidden="true"></span>`);
                     }
 
                     // Listener for selection of an operation type

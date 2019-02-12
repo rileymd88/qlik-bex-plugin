@@ -1,5 +1,8 @@
 # Qlik BEx Plugin
+*Important Information*
+>You can NOT download the repo and directly install as an extension. Please download the zip file found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/archive/0.0.1.zip)
 
+[![Qlik BEx Plugin in Action](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx8.png)](https://www.youtube.com/watch?v=7nsVEGci1c0)
 ## The Solution
 The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and brings Governed Self Service within SAP BI environments to the next level.
 * It provides an easy way to access data for SAP Bex Users
@@ -10,10 +13,8 @@ The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and bring
 * You can easily connect your BEx Queries with other data sources (like other Queries or non SAP Data)
 
 
-*Important Information*
->This extension code requires packing using the qExt tools to develop it further. You can NOT download the repo and directly install as an extension. To get the correct approved version download from the releases page (file: qlik-bex-plugin.zip) and install directly into Qlik Sense.
-
-* [GitHub releases page](https://github.com/rileymd88/qlik-bex-plugin/releases)
+*Further development*
+>This extension code requires packing using the qExt tools to develop it further.
 
 ### Requirements
 The Qlik BEx Plugin has been tested within the following setups
@@ -43,8 +44,8 @@ The Qlik BEx Plugin has been tested within the following setups
     a. note: Engine and Service Dispatcher have to be restarted after installation
     b. don't forget to apply a valid license
 3. Create a data connection for the Qlik SAP BAPI and the Qlik SAP BEx connector
-4. Import the metadata App (Link below)
-5. Import the Qlik BEx Plugin Extension found here
+4. Import the metadata App found [here](https://github.com/rileymd88/data/raw/master/qlik-bex-plugin/Qlik%20BEx%20Plugin%20-%20Metadata%20App.qvf)
+5. Import the Qlik BEx Plugin Extension found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/archive/0.0.1.zip)
 
 ## Metadata App
 *Important Note:*
