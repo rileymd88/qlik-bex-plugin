@@ -1,6 +1,6 @@
 # Qlik BEx Plugin
 *Important Information*
->You can NOT download the repo and directly install as an extension. Please download the zip file found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/archive/0.0.1.zip)
+>You can NOT download the repo and directly install as an extension. Please download the zip file found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/releases/download/v1.2/qlik-bex-plugin.zip)
 
 [![Qlik BEx Plugin in Action](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx8.png)](https://www.youtube.com/watch?v=7nsVEGci1c0)
 ## The Solution
