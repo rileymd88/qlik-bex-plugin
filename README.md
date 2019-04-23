@@ -56,7 +56,7 @@ The Qlik BEx Plugin has been tested within the following setups
 1. Open the Metadata App within the Data Load Editor
 2. Create a folder connection and enter its name in line 2 of the load script
     a. note: this is for storage of metadata QVDs
-3. Copy the Metadata extraction script files into this folder. You can find the scrip files [here](https://github.com/rileymd88/data/raw/master/qlik-bex-plugin/Script%20Files.zip)
+3. Copy the Metadata extraction script files into this folder. You can find the script files [here](https://github.com/rileymd88/data/raw/master/qlik-bex-plugin/Script%20Files.zip)
 4. Make sure that the name of the data connection in line 9 matches the previously created BAPI connector data connection
 5. Make sure that the name of the folder connection is correctly inserted in line 2 of script section "Load Metadata"
 6. Execute the load script
