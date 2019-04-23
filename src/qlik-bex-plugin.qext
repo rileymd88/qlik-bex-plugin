@@ -2,7 +2,7 @@
 	"name": "Qlik BEx Plugin",
 	"description": "A plugin which enables a seamless Qlik BEx experience",
 	"type": "visualization",
-	"version": "1.2",
+	"version": "1.3",
 	"icon": "database",
 	"preview": "./assets/BexPluginLogo_Hintergrund_weiß.png",
 	"author": "QlikPresales",

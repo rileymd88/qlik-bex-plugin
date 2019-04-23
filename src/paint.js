@@ -3,7 +3,6 @@ import dialog from '../static/dialog.html';
 import varHtml from '../static/variableModal.html';
 import html from '../static/qdcBex.html';
 
-$(".qui-buttonset-right").prepend($("<button class='lui-button lui-button--toolbar' id='buttonPlugin'><span class='lui-icon  lui-icon--database'></span><span class='lui-button__text'>BEx Plugin</span></button>"));
 var rendered = false;
 var variableValueList = [];
 var setupOn = false;
@@ -15,7 +14,6 @@ var ranReloadAlready = false;
 
 
 export default async function ($element, layout) {
-
     if (layout.hideElement) {
         $('#setupLogoContainer').hide();
     }
@@ -30,7 +28,20 @@ export default async function ($element, layout) {
         var app = await qlik.currApp(this);
         var global = await qlik.getGlobal(config);
         var enigma = await this.backendApi.model.enigmaModel.app;
-
+        try {
+            var version = await enigma.global.engineVersion();
+            version = version.qComponentVersion.replace(/./g, '');
+            // If less then or equal to Nov 2018
+            if(parseInt(version) <= 122447) {
+                $(".qui-buttonset-right").prepend($("<button class='lui-button lui-button--toolbar' id='buttonPlugin'><span class='lui-icon  lui-icon--database'></span><span class='lui-button__text'>BEx Plugin</span></button>"));
+            }
+            else {
+                $(".qs-toolbar__right").prepend($("<button class='lui-button' id='buttonPlugin' style='margin-right:2px;'><span class='lui-icon  lui-icon--database'></span><span class='lui-button__text'></span></button>"));
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
         // Get current user
         var currentUser = await getUserName(global);
 
@@ -310,7 +321,7 @@ export default async function ($element, layout) {
                     }
 
                     // deletes Class spark if a selection has been made - IE11 display bug
-                    qdcApp.getList("SelectionObject", function (x) {
+                    qdcApp.getList("SelectionObject", function () {
                         var isIE = false || !!document.documentMode;
                         waitForElementToDisplay(".qv-collapsed-listbox.ng-scope.ng-isolate-scope.spark.interactive", 50);
                     });
@@ -1135,6 +1146,7 @@ export default async function ($element, layout) {
                                 $("#dialogClose").show();
                             } else {
                                 $("#reloadSuccess").show();
+                                $("#reloadSuccess").css("display", "block");
                                 $("#reloadStatus").append('<p style="color: green;">Your app reloaded sucessfully!</p>');
                                 $("#cancelScript").hide();
                                 $("#dialogNext").hide();
