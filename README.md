@@ -1,6 +1,6 @@
 # Qlik BEx Plugin
 *Important Information*
->You can NOT download the repo and directly install as an extension. Please download the zip file found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/releases/download/v1.2/qlik-bex-plugin.zip)
+>You can NOT download the repo and directly install as an extension. Please download the zip file found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/files/3106655/qlik-bex-plugin.zip)
 
 [![Qlik BEx Plugin in Action](https://raw.githubusercontent.com/rileymd88/data/master/qlik-bex-plugin/BEx8.png)](https://www.youtube.com/watch?v=7nsVEGci1c0)
 ## The Solution
@@ -46,7 +46,7 @@ The Qlik BEx Plugin has been tested within the following setups
     b. don't forget to apply a valid license
 3. Create a data connection for the Qlik SAP BAPI and the Qlik SAP BEx connector
 4. Import the metadata App found [here](https://github.com/rileymd88/data/raw/master/qlik-bex-plugin/Qlik%20BEx%20Plugin%20-%20Metadata%20App%20v1.2.qvf)
-5. Import the Qlik BEx Plugin Extension found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/releases/download/v1.2/qlik-bex-plugin.zip)
+5. Import the Qlik BEx Plugin Extension found [here](https://github.com/QlikPreSalesDACH/qlik-bex-plugin/files/3106655/qlik-bex-plugin.zip)
 
 ## Metadata App
 *Important Note:*
