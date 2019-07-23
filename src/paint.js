@@ -245,7 +245,7 @@ export default async function ($element, layout) {
                     var url = window.location.href;
                     var urlList = url.split("/");
                     var sheetId = urlList[7];
-                    window.location = 'https://' + config.host + "/sense/app/" + app.id + "/sheet/" + sheetId + "/state/insight";
+                    window.location = 'https://' + config.host + "/sense/app/" + app.id + "/sheet/" + sheetId + "/state/insight/overlay/insight";
                 })
 
 
@@ -292,7 +292,7 @@ export default async function ($element, layout) {
                 // Create filter panes based on config.js
                 function getFilters() {
                     if ($('#filterHolder0').is(':empty')) {
-
+                        
                         qdcApp.visualization.get(qdcConfig.measures).then(function (vis) {
                             vis.show("filterHolder2");
                         });

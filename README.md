@@ -17,7 +17,7 @@ The Qlik BEx Plugin is an add on to the Qlik Visual Anlaytics Platform and bring
 >This extension code requires packing using the qExt tools to develop it further.
 
 ### Requirements
-The Qlik BEx Plugin has been tested within the following setups
+The Qlik BEx Plugin has been tested within the following setups - The BEx Plugin does NOT currently work with Qlik Sense June 2019.
 
 **Qlik Sense Enterprise**
 * February 2019
